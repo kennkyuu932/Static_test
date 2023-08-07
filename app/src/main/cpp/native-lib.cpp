@@ -174,3 +174,41 @@ Java_com_example_static_1test_MainActivity_ECDSATest(JNIEnv *env, jobject /*this
         return 1;
     }
 }
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_example_static_1test_MainActivity_RSATest(JNIEnv *env, jobject /*this*/) {
+    CRYPTO_library_init();
+
+    // Initialize BoringSSL
+    OPENSSL_init_crypto(0, nullptr);
+
+    // Generate RSA key pair
+    RSA *rsa_key = RSA_new();
+    BIGNUM *bn = BN_new();
+    BN_set_word(bn, RSA_F4); // RSA_F4 is a commonly used exponent value
+    RSA_generate_key_ex(rsa_key, 2048, bn, nullptr);
+
+    // Print public key
+    BIO *bio = BIO_new(BIO_s_mem());
+    PEM_write_bio_RSAPublicKey(bio, rsa_key);
+    char *pub_key;
+    size_t pub_key_len = BIO_get_mem_data(bio, &pub_key);
+    __android_log_print(ANDROID_LOG_DEBUG,"cpp","Public Key:\n%s\n", pub_key);
+
+    // Encrypt a message
+    const char *message = "Hello, BoringSSL!";
+    unsigned char ciphertext[RSA_size(rsa_key)];
+    int encrypted_size = RSA_public_encrypt(strlen(message), (const unsigned char *)message, ciphertext, rsa_key, RSA_PKCS1_OAEP_PADDING);
+
+    // Print encrypted message
+    __android_log_print(ANDROID_LOG_DEBUG,"cpp","Encrypted Message:");
+    for (int i = 0; i < encrypted_size; ++i) {
+        __android_log_print(ANDROID_LOG_DEBUG,"cpp","%02X", ciphertext[i]);
+    }
+
+    // Clean up
+    RSA_free(rsa_key);
+    BN_free(bn);
+    BIO_free(bio);
+    return 1;
+}
