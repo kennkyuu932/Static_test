@@ -206,6 +206,22 @@ Java_com_example_static_1test_MainActivity_RSATest(JNIEnv *env, jobject /*this*/
         __android_log_print(ANDROID_LOG_DEBUG,"cpp","%02X", ciphertext[i]);
     }
 
+
+    //Decrypt a message
+    int ciphertext_size = sizeof(ciphertext);
+    unsigned char decrypted[RSA_size(rsa_key)];
+    int decrypted_size = RSA_private_decrypt(ciphertext_size,ciphertext,decrypted,rsa_key,RSA_PKCS1_OAEP_PADDING);
+
+    if(decrypted_size==-1){
+        __android_log_print(ANDROID_LOG_DEBUG,"cpp","decrypt error");
+        RSA_free(rsa_key);
+        BN_free(bn);
+        BIO_free(bio);
+        return 0;
+    }
+
+    __android_log_print(ANDROID_LOG_DEBUG,"cpp","decrypted message: %.*s\n",decrypted_size,decrypted);
+
     // Clean up
     RSA_free(rsa_key);
     BN_free(bn);
