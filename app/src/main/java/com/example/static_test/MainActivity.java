@@ -35,8 +35,10 @@ public class MainActivity extends AppCompatActivity {
 
         //Log.d(TAG, "cryptoTest: "+cryptoTest());
         //Log.d(TAG, "eckeyTest: "+eckeyTest());
-        Log.d(TAG, "ECDSATest: "+ECDSATest());
-        Log.d(TAG, "RSATest: "+RSATest());
+        //Log.d(TAG, "ECDSATest: "+ECDSATest());
+        //Log.d(TAG, "RSATest: "+RSATest());
+        Log.d(TAG, "SHATest: "+SHATest());
+        //Log.d(TAG, "CastTest: "+CastTest());
     }
 
     /**
@@ -52,4 +54,8 @@ public class MainActivity extends AppCompatActivity {
     public native int ECDSATest();
 
     public native int RSATest();
+
+    public native int SHATest();
+
+    public native String CastTest();
 }

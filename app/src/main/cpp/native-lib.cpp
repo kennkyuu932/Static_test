@@ -228,3 +228,31 @@ Java_com_example_static_1test_MainActivity_RSATest(JNIEnv *env, jobject /*this*/
     BIO_free(bio);
     return 1;
 }
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_example_static_1test_MainActivity_SHATest(JNIEnv *env, jobject /*this*/) {
+    const char *test = "SHA256 Test!!";
+
+//    SHA256_CTX *sha256Ctx;
+//    SHA256_Init(sha256Ctx);
+//
+
+    const auto *data=(const unsigned char *)test;
+    size_t len = strlen(test);
+    uint8_t out[SHA256_DIGEST_LENGTH];
+    SHA256(data,len,out);
+
+    for (unsigned char i : out){
+        __android_log_print(ANDROID_LOG_DEBUG,"cpp","%d",i);
+    }
+
+
+    return 1;
+}
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_example_static_1test_MainActivity_CastTest(JNIEnv *env, jobject /*this*/) {
+    char *test = "Test Message!";
+
+    return env->NewStringUTF(test);
+}
