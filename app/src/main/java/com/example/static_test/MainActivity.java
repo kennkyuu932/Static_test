@@ -37,8 +37,12 @@ public class MainActivity extends AppCompatActivity {
         //Log.d(TAG, "eckeyTest: "+eckeyTest());
         //Log.d(TAG, "ECDSATest: "+ECDSATest());
         //Log.d(TAG, "RSATest: "+RSATest());
-        Log.d(TAG, "SHATest: "+SHATest());
-        //Log.d(TAG, "CastTest: "+CastTest());
+        //Log.d(TAG, "SHATest: "+SHATest());
+//        int[] Test=CastTest();
+//        for(int i = 0 ;i<Test.length;i++){
+//            Log.d(TAG, "CastTest:"+i+" "+Test[i]);
+//        }
+        Log.d(TAG, "SHATest2: "+SHATest2());
     }
 
     /**
@@ -57,5 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
     public native int SHATest();
 
-    public native String CastTest();
+    public native int[] CastTest();
+
+    public native int SHATest2();
+
 }

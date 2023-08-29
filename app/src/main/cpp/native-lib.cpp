@@ -243,16 +243,85 @@ Java_com_example_static_1test_MainActivity_SHATest(JNIEnv *env, jobject /*this*/
     SHA256(data,len,out);
 
     for (unsigned char i : out){
-        __android_log_print(ANDROID_LOG_DEBUG,"cpp","%d",i);
+        __android_log_print(ANDROID_LOG_DEBUG,"cpp","%u",i);
     }
 
 
     return 1;
 }
 extern "C"
-JNIEXPORT jstring JNICALL
+JNIEXPORT jintArray JNICALL
 Java_com_example_static_1test_MainActivity_CastTest(JNIEnv *env, jobject /*this*/) {
     char *test = "Test Message!";
 
-    return env->NewStringUTF(test);
+    const auto *data=(const unsigned char *)test;
+    size_t len = strlen(test);
+    uint8_t out[SHA256_DIGEST_LENGTH];
+    SHA256(data,len,out);
+
+    jintArray Test;
+    Test= reinterpret_cast<jintArray>(out);
+
+
+    for (unsigned char i : out){
+        __android_log_print(ANDROID_LOG_DEBUG,"cpp","%u",i);
+    }
+
+    return Test;
+}
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_example_static_1test_MainActivity_SHATest2(JNIEnv *env, jobject /*this*/) {
+    char *test1="ABCDEFg";
+    //char *test2="ABCDEFg";
+    char *test2="AbdcEzg";
+//
+//    const auto *data1=(const unsigned char *)test1;
+//    size_t len1 = strlen(test1);
+//    uint8_t out1[SHA256_DIGEST_LENGTH];
+//    SHA256(data1,len1,out1);
+//
+//    const auto *data2=(const unsigned char *)test2;
+//    size_t len2 = strlen(test2);
+//    uint8_t out2[SHA256_DIGEST_LENGTH];
+//    SHA256(data2,len2,out2);
+//
+//    for(int i=0;i<SHA256_DIGEST_LENGTH;i++){
+//        if (out1[i]!=out2[i]){
+//            __android_log_print(ANDROID_LOG_DEBUG,"cpp","test1とtest2は違うもの");
+//            return 0;
+//        }
+//    }
+//    __android_log_print(ANDROID_LOG_DEBUG,"cpp","test1とtest2は同じもの");
+
+    __android_log_print(ANDROID_LOG_DEBUG,"cpp","%cと%cと%cが出たら正解",test1[0],test1[4],test1[6]);
+
+    int test[strlen(test1)];
+    const auto *data1= (const unsigned char*)test1;
+    const auto *data2=(const unsigned char*)test2;
+
+    for (int i=0;i<strlen(test1);i++){
+        size_t len=1;
+        uint8_t out1[SHA256_DIGEST_LENGTH];
+        uint8_t out2[SHA256_DIGEST_LENGTH];
+        SHA256(data1, len, out1);
+        SHA256(data2,len,out2);
+        for(int j=0;j<SHA256_DIGEST_LENGTH;j++){
+            if(out1[j]!=out2[j]){
+                test[i]=0;
+                break;
+            }
+            test[i]=1;
+        }
+        data1++;
+        data2++;
+    }
+
+    for(int i=0;i< strlen(test1);i++){
+        if(test[i]==1){
+            __android_log_print(ANDROID_LOG_DEBUG,"cpp","%c",test1[i]);
+        }
+    }
+
+    return 1;
 }
